@@ -1,9 +1,15 @@
 package com.sudoku;
 
 import com.sudoku.model.Board;
+import com.sudoku.model.Space;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Stream;
+
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 
 public class Main {
@@ -48,6 +54,49 @@ public class Main {
             }
 
         }
+
+    }
+
+    private static void finishGame() {
+    }
+
+    private static void clearGame() {
+    }
+
+    private static void showGameStatus() {
+    }
+
+    private static void showCurrentGame() {
+    }
+
+    private static void removeNumber() {
+    }
+
+    private static void inputNumber() {
+    }
+
+    private static void startGame(Map<String, String> positions) {
+        if(nonNull(board)){
+            System.out.println("O jogo ja foi iniciado");
+            return;
+        }
+
+        List<List<Space>> spaces = new ArrayList<>();
+
+        for(int i = 0 ; i<BOARD_LIMIT; i++){
+            spaces.add(new ArrayList<>());
+            for (int j = 0; j<BOARD_LIMIT; j++){
+                var positionConfig = positions.get("%s, %s".formatted(i, j));
+                var expected = Integer.parseInt(positionConfig.split(",")[0]);
+                var fixed = Boolean.parseBoolean(positionConfig.split(",")[1]);
+                var currentSpace = new Space(expected, fixed);
+                spaces.get(i).add(currentSpace);
+                
+                board = new Board(spaces);
+
+            }
+        }
+
 
     }
 }
