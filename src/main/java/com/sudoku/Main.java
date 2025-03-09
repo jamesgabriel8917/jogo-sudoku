@@ -9,13 +9,15 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
+import static com.sudoku.util.BoardService.BOARD_LIMIT;
+import static com.sudoku.util.BoardTemplate.BOARD_TEMPLATE;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 
 public class Main {
     private final static Scanner scanner = new Scanner(System.in);
     private static Board board;
-    private final static int BOARD_LIMIT  = 9;
 
 
     public static void main(String[] args) {
@@ -58,21 +60,109 @@ public class Main {
     }
 
     private static void finishGame() {
+        if(isNull(board)){
+            System.out.println("O jogo não foi iniciado");
+            return;
+        }
+
+        if (board.gameIsFinished()){
+            System.out.println("Parabens, voce conmcluiu o jogo");
+            showCurrentGame();
+            board = null;
+        }else if (board.hasErrors()){
+            System.out.println("Seu jogo tem erros, verifique");
+            showCurrentGame();
+        }else {
+            System.out.println("O jogo esta incompleto");
+            showCurrentGame();
+        }
+
+
     }
 
     private static void clearGame() {
+        if(isNull(board)){
+            System.out.println("O jogo não foi iniciado");
+            return;
+        }
+
+        board.reset();
+
+
+
     }
 
     private static void showGameStatus() {
+        if(isNull(board)){
+            System.out.println("O jogo não foi iniciado");
+            return;
+        }
+
+        System.out.printf("Status do jogo %s \n", board.getStatus().getLabel());
+
+        if (board.hasErrors()){
+            System.out.println("O jogo contem erros");
+        }else {
+            System.out.println("O jogo nao contem erros");
+        }
+
+
     }
 
     private static void showCurrentGame() {
+        if(isNull(board)){
+            System.out.println("O jogo não foi iniciado");
+            return;
+        }
+
+        var args = new Object[81];
+        var argPos = 0;
+        for (int i = 0; i < BOARD_LIMIT; i++) {
+            for (var col: board.getSpaces()) {
+                args[argPos ++] = " " + ((isNull(col.get(i).getActual())) ? " " : col.get(i).getActual());
+            }
+        }
+
+        System.out.println("Seu jogo se encontra desta forma");
+        System.out.printf((BOARD_TEMPLATE) + "%n", args);
+
     }
 
     private static void removeNumber() {
+        if(isNull(board)){
+            System.out.println("O jogo não foi iniciado");
+            return;
+        }
+
+        System.out.println("Informe a coluna em que o numero sera removido");
+        var col =  runUntilGetValidNumber(0,8);
+        System.out.println("Informe a linha em que o numero sera removido");
+        var row =  runUntilGetValidNumber(0,8);
+
+        if(!board.clearValue(col, row)){
+            System.out.println("A posicao tem um valor fixo ");
+        }
+
+
     }
 
     private static void inputNumber() {
+        if(isNull(board)){
+            System.out.println("O jogo não foi iniciado");
+            return;
+        }
+
+        System.out.println("Informe a coluna em que o numero sera inserido");
+        var col =  runUntilGetValidNumber(0,8);
+        System.out.println("Informe a linha em que o numero sera inserido");
+        var row =  runUntilGetValidNumber(0,8);
+        System.out.println("informe o nuemro que vai nessa posicao");
+        var value  = runUntilGetValidNumber(1,9);
+
+        if(!board.changeValue(col, row, value)){
+            System.out.println("A posicao tem um valor fixo ");
+        }
+
     }
 
     private static void startGame(Map<String, String> positions) {
@@ -92,11 +182,23 @@ public class Main {
                 var currentSpace = new Space(expected, fixed);
                 spaces.get(i).add(currentSpace);
                 
-                board = new Board(spaces);
 
             }
         }
-
+            board = new Board(spaces);
+            System.out.println("Jogo criado");
 
     }
+
+    private static int runUntilGetValidNumber(final int min, final int max){
+        var current  = scanner.nextInt();
+
+        while(current < min || current > max){
+            System.out.printf("Iforme um numero entre %s e %s \n", min, max);
+            current = scanner.nextInt();
+        }
+
+        return current;
+    }
+
 }
