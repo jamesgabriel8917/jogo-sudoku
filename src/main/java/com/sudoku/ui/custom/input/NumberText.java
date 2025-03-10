@@ -2,7 +2,10 @@ package com.sudoku.ui.custom.input;
 
 import com.sudoku.model.Space;
 
+
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public class NumberText extends JTextField {
@@ -23,5 +26,32 @@ public class NumberText extends JTextField {
         if(space.isFixed()){
             this.setText(space.getActual().toString());
         }
+
+        this.getDocument().addDocumentListener(new DocumentListener() {
+
+            private void changeSpace(){
+                if(getText().isEmpty()){
+                    space.clearSpace();
+                    return;
+                }
+                space.setActual(Integer.parseInt(getText()));
+            }
+
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
     }
 }

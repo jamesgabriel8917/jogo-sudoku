@@ -1,6 +1,7 @@
 package com.sudoku.ui.custom.panel;
 
 import com.sudoku.ui.custom.input.NumberText;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
