@@ -12,7 +12,9 @@ public class NumberText extends JTextField {
 
     private final Space space;
 
-    public NumberText(Space space) {
+
+
+    public NumberText(final Space space) {
         this.space = space;
         var dimension = new Dimension(50, 50);
         this.setSize(dimension);
