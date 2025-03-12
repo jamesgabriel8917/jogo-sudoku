@@ -21,7 +21,5 @@ public class UiMain {
         var mainScreen = new MainScreen(gameConfig);
         mainScreen.buildMainScreen();
 
-
-
     }
 }
